@@ -2,9 +2,7 @@ package com.rimut.ShashlikBot.service;
 
 import com.rimut.ShashlikBot.config.BotConfig;
 import com.rimut.ShashlikBot.model.User;
-import com.rimut.ShashlikBot.model.UserRepository;
 import com.vdurmont.emoji.EmojiParser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -29,15 +27,15 @@ import java.util.List;
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserService userService;
 
     @Override
     public String getBotToken() {
         return config.getToken();
     }
 
-    final BotConfig config;
+    private final BotConfig config;
 
     static final String HELP_TEXT = "This bot is created to demonstrate Spring capabilities.\n\n" +
             "You can execute commands from the main menu on the left or by typing a command:\n\n" +
@@ -50,7 +48,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     static final String YES_BUTTON = "YES_BUTTON";
     static final String NO_BUTTON = "NO_BUTTON";
 
-    public TelegramBot(BotConfig config) {
+    public TelegramBot(UserService userService, BotConfig config) {
+        this.userService = userService;
         this.config = config;
         List<BotCommand> listOfCommands = new ArrayList<>();
         listOfCommands.add(new BotCommand("/start","welcome to the club, buddy"));
@@ -80,7 +79,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if(messageText.contains("/send") && config.getOwnerId() == chatId) {
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
-                var users = userRepository.findAll();
+                var users = userService.findAll();
                 for (User user : users){
                     prepareAndSendMessage(user.getChatId(), textToSend);
                 }
@@ -151,7 +150,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void registerUser(Message msg) {
 
-        if(userRepository.findById(msg.getChatId()).isEmpty()){
+        if(userService.findById(msg.getChatId()).isEmpty()){
             var chatId = msg.getChatId();
             var chat = msg.getChat();
 
@@ -163,7 +162,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setUserName(chat.getUserName());
             user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
 
-            userRepository.save(user);
+            userService.save(user);
         }
     }
 
