@@ -32,6 +32,11 @@ public class StartCommand extends Command {
     }
 
     @Override
+    public String description() {
+        return "to see a welcome message";
+    }
+
+    @Override
     public SendMessage process(Update update) {
         long chatId = update.getMessage().getFrom().getId();
         registerUser(update.getMessage());

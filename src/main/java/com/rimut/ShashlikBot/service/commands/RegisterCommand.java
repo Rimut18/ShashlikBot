@@ -29,6 +29,11 @@ public class RegisterCommand extends Command {
     }
 
     @Override
+    public String description() {
+        return "to register";
+    }
+
+    @Override
     public SendMessage process(Update update) {
         long chatId = update.getMessage().getFrom().getId();
         return register(chatId);

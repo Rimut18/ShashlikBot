@@ -23,7 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final UserService userService;
     private final List<Command> commands;
     private final BotConfig config;
-
+    public static StringBuilder helpText = new StringBuilder();
     static final String YES_BUTTON = "YES_BUTTON";
     static final String NO_BUTTON = "NO_BUTTON";
 
@@ -32,9 +32,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.commands = commands;
         this.config = config;
         List<BotCommand> listOfCommands = new ArrayList<>();
+        helpText.append("This bot is created to demonstrate Spring capabilities.\n\n" +
+                "You can execute commands from the main menu on the left or by typing a command:\n\n");
         commands.forEach(clazz -> {
-            BotCommand botCommand = new BotCommand(clazz.getClass().getAnnotation(Service.class).value(), clazz.explanation());
+            String name = clazz.getClass().getAnnotation(Service.class).value();
+            BotCommand botCommand = new BotCommand(name, clazz.explanation());
             listOfCommands.add(botCommand);
+            helpText.append("Type " + name + " " + clazz.description());
+            helpText.append("\n\n");
         });
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
@@ -65,12 +70,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                     executeMessage(prepareAndSendMessage(user.getChatId(), textToSend));
                 }
             } else {
-                SendMessage sendMessage = commands.stream()
+                SendMessage message = commands.stream()
                         .filter(clazz -> clazz.exist(update.getMessage().getText()))
                         .findFirst()
                         .map(clazz -> clazz.process(update))
                         .orElseGet(() -> prepareAndSendMessage(chatId, "Sorry, command was not recognized"));
-                executeMessage(sendMessage);
+                executeMessage(message);
             }
         } else if (update.hasCallbackQuery()) {
             String callbackData = update.getCallbackQuery().getData();
