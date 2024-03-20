@@ -1,19 +1,18 @@
 package com.rimut.ShashlikBot.service.commands;
 
 
+import com.rimut.ShashlikBot.service.TelegramBot;
 import com.rimut.ShashlikBot.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.rimut.ShashlikBot.service.TelegramBot.helpText;
-
 @Service("/help")
 public class HelpCommand extends Command {
-    private final UserService userService;
-
-    public HelpCommand(UserService userService) {
-        this.userService = userService;
+    private final TelegramBot bot;
+    public HelpCommand(@Lazy TelegramBot bot) {
+        this.bot = bot;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class HelpCommand extends Command {
     @Override
     public SendMessage process(Update update) {
         long chatId = update.getMessage().getFrom().getId();
-        return prepareAndSendMessage(chatId, String.valueOf(helpText));
+        return prepareAndSendMessage(chatId, bot.getHelpText());
     }
 
 }

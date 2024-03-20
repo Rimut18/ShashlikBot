@@ -3,7 +3,10 @@ package com.rimut.ShashlikBot.service;
 import com.rimut.ShashlikBot.config.BotConfig;
 import com.rimut.ShashlikBot.model.User;
 import com.rimut.ShashlikBot.service.commands.Command;
+import com.rimut.ShashlikBot.service.commands.StickerCommand;
 import com.vdurmont.emoji.EmojiParser;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -22,15 +25,18 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final UserService userService;
     private final List<Command> commands;
+    @Autowired
+    private StickerCommand stickerCommand;
     private final BotConfig config;
-    public static StringBuilder helpText = new StringBuilder();
+    private static String HELP_TEXT;
     static final String YES_BUTTON = "YES_BUTTON";
     static final String NO_BUTTON = "NO_BUTTON";
-
+    @Autowired
     public TelegramBot(UserService userService, List<Command> commands, BotConfig config) {
         this.userService = userService;
         this.commands = commands;
         this.config = config;
+        StringBuilder helpText = new StringBuilder();
         List<BotCommand> listOfCommands = new ArrayList<>();
         helpText.append("This bot is created to demonstrate Spring capabilities.\n\n" +
                 "You can execute commands from the main menu on the left or by typing a command:\n\n");
@@ -41,11 +47,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             helpText.append("Type " + name + " " + clazz.description());
             helpText.append("\n\n");
         });
+        HELP_TEXT = helpText.toString();
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
 
         }
+    }
+    @PostConstruct
+    public void init() {
+        stickerCommand.setBot(this);
     }
 
     @Override
@@ -56,6 +67,10 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return config.getBotName();
+    }
+
+    public String getHelpText() {
+        return HELP_TEXT;
     }
 
     @Override

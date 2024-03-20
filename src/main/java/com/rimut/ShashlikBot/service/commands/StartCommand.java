@@ -1,24 +1,24 @@
 package com.rimut.ShashlikBot.service.commands;
 
-import com.rimut.ShashlikBot.model.User;
 import com.rimut.ShashlikBot.service.UserService;
 import com.vdurmont.emoji.EmojiParser;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Service("/start")
 public class StartCommand extends Command {
     private final UserService userService;
+    private final List<Command> commands;
 
-    public StartCommand(UserService userService) {
+    public StartCommand(UserService userService, List<Command> commands) {
         this.userService = userService;
+        this.commands = commands;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class StartCommand extends Command {
     @Override
     public SendMessage process(Update update) {
         long chatId = update.getMessage().getFrom().getId();
-        registerUser(update.getMessage());
+        userService.registerUser(update.getMessage());
         return startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 
@@ -54,35 +54,13 @@ public class StartCommand extends Command {
     private ReplyKeyboardMarkup createReplyKeyboardMarkup() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
-
         KeyboardRow row = new KeyboardRow();
-        row.add("/sticker");
+        commands.forEach(clazz -> {
+            row.add(clazz.getClass().getAnnotation(Service.class).value());
+        });
+        row.remove("/start");
         keyboardRows.add(row);
-
-        row = new KeyboardRow();
-        row.add("/register");
-        row.add("/help");
-        keyboardRows.add(row);
-
         keyboardMarkup.setKeyboard(keyboardRows);
         return keyboardMarkup;
-    }
-
-    private void registerUser(Message msg) {
-
-        if(userService.findById(msg.getChatId()).isEmpty()){
-            var chatId = msg.getChatId();
-            var chat = msg.getChat();
-
-            User user = new User();
-
-            user.setChatId(chatId);
-            user.setFirstName(chat.getFirstName());
-            user.setLastName(chat.getLastName());
-            user.setUserName(chat.getUserName());
-            user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-
-            userService.save(user);
-        }
     }
 }
