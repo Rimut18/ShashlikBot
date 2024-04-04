@@ -22,6 +22,7 @@ public class CommandTest {
     @Autowired
     private TelegramBot bot;
 
+    //Что-то написал)
     @Test
     void process(){
         List<Command> commands = new ArrayList<>();
