@@ -31,7 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static String HELP_TEXT;
     static final String YES_BUTTON = "YES_BUTTON";
     static final String NO_BUTTON = "NO_BUTTON";
-    @Autowired
+
     public TelegramBot(UserService userService, List<Command> commands, BotConfig config) {
         this.userService = userService;
         this.commands = commands;
