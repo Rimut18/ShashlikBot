@@ -1,7 +1,7 @@
 package com.rimut.ShashlikBot.service.commands;
 
+import com.rimut.ShashlikBot.service.RestToDb;
 import com.rimut.ShashlikBot.service.TelegramBot;
-import com.rimut.ShashlikBot.service.UserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
@@ -11,10 +11,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service("/sticker")
 public class StickerCommand extends Command {
-    private final UserService userService;
     private TelegramBot bot;
-    public StickerCommand(UserService userService) {
-        this.userService = userService;
+    public StickerCommand() {
     }
 
     public void setBot(TelegramBot bot) {

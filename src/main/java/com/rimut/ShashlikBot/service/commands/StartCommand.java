@@ -1,6 +1,6 @@
 package com.rimut.ShashlikBot.service.commands;
 
-import com.rimut.ShashlikBot.service.UserService;
+import com.rimut.ShashlikBot.service.RestToDb;
 import com.vdurmont.emoji.EmojiParser;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,11 +13,11 @@ import java.util.List;
 
 @Service("/start")
 public class StartCommand extends Command {
-    private final UserService userService;
+    private final RestToDb restToDb;
     private final List<Command> commands;
 
-    public StartCommand(UserService userService, List<Command> commands) {
-        this.userService = userService;
+    public StartCommand(RestToDb restToDb, List<Command> commands) {
+        this.restToDb = restToDb;
         this.commands = commands;
     }
 
@@ -39,7 +39,7 @@ public class StartCommand extends Command {
     @Override
     public SendMessage process(Update update) {
         long chatId = update.getMessage().getFrom().getId();
-        userService.registerUser(update.getMessage());
+        restToDb.sendToDb(update.getMessage());
         return startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 

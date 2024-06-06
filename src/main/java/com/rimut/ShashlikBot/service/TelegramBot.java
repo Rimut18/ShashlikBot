@@ -1,9 +1,9 @@
 package com.rimut.ShashlikBot.service;
 
 import com.rimut.ShashlikBot.config.BotConfig;
-import com.rimut.ShashlikBot.model.User;
 import com.rimut.ShashlikBot.service.commands.Command;
 import com.rimut.ShashlikBot.service.commands.StickerCommand;
+import com.rimut.db.microservice.model.User;
 import com.vdurmont.emoji.EmojiParser;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +22,18 @@ import java.util.List;
 
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
-
-    private final UserService userService;
     private final List<Command> commands;
+    private final RestToDb restToDb;
     @Autowired
     private StickerCommand stickerCommand;
     private final BotConfig config;
+
     private static String HELP_TEXT;
     static final String YES_BUTTON = "YES_BUTTON";
     static final String NO_BUTTON = "NO_BUTTON";
 
-    public TelegramBot(UserService userService, List<Command> commands, BotConfig config) {
-        this.userService = userService;
+    public TelegramBot(List<Command> commands, BotConfig config, RestToDb restToDb) {
+        this.restToDb = restToDb;
         this.commands = commands;
         this.config = config;
         StringBuilder helpText = new StringBuilder();
@@ -80,7 +80,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getFrom().getId();
             if(messageText.contains("/send") && config.getOwnerId() == chatId) {
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
-                var users = userService.findAll();
+                var users = restToDb.getAllUsers();
                 for (User user : users){
                     executeMessage(prepareAndSendMessage(user.getChatId(), textToSend));
                 }
@@ -133,5 +133,4 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         return message;
     }
-
 }

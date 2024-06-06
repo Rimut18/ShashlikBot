@@ -1,6 +1,6 @@
 package com.rimut.ShashlikBot.service.commands;
 
-import com.rimut.ShashlikBot.service.UserService;
+import com.rimut.ShashlikBot.service.RestToDb;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,10 +12,9 @@ import java.util.List;
 
 @Service("/register")
 public class RegisterCommand extends Command {
-    private final UserService userService;
 
-    public RegisterCommand(UserService userService) {
-        this.userService = userService;
+
+    public RegisterCommand() {
     }
 
     @Override
