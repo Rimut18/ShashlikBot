@@ -1,12 +1,12 @@
 package com.rimut.db.microservice.controller;
 
+import com.rimut.db.microservice.dtos.UserDto;
 import com.rimut.db.microservice.service.UserService;
-import com.rimut.db.microservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/users")
@@ -20,17 +20,17 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> findAllUsers() {
+    public List<UserDto> findAllUsers() {
         return userService.findAll();
     }
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id) {
-        return userService.findById(id).orElse(null);
+    public UserDto findById(@PathVariable Long id) {
+        return userService.getOne(id);
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public UserDto createUser(@RequestBody UserDto userDto) {
+        return userService.registerUser(userDto);
     }
 
     @DeleteMapping("/{id}")

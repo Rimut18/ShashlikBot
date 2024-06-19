@@ -11,13 +11,13 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rimut</groupId>
-    <artifactId>ShashlikBot</artifactId>
+    <artifactId>shashlikbot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
     <modules>
-        <module>Telegram</module>
-        <module>CrudService</module>
+        <module>telegram</module>
+        <module>dbmodule</module>
     </modules>
 
     <dependencyManagement>
