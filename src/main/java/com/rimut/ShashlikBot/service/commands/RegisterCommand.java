@@ -1,6 +1,5 @@
-package com.rimut.ShashlikBot.service.commands;
+package com.rimut.shashlikbot.service.commands;
 
-import com.rimut.ShashlikBot.service.RestToDb;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;

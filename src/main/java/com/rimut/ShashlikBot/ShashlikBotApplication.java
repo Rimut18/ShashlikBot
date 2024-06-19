@@ -1,4 +1,4 @@
-package com.rimut.ShashlikBot;
+package com.rimut.shashlikbot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

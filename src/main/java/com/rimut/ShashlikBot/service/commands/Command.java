@@ -1,4 +1,4 @@
-package com.rimut.ShashlikBot.service.commands;
+package com.rimut.shashlikbot.service.commands;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;

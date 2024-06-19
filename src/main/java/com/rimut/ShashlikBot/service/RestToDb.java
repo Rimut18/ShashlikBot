@@ -1,9 +1,9 @@
-package com.rimut.ShashlikBot.service;
+package com.rimut.shashlikbot.service;
 
+import com.rimut.db.microservice.dtos.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.rimut.db.microservice.model.User;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.sql.Timestamp;
@@ -21,23 +21,22 @@ public class RestToDb {
 
     public void sendToDb(Message msg) {
         var chatId = msg.getChatId();
-        ResponseEntity<User> response = restTemplate.getForEntity("http://localhost:8082/users/" + chatId, User.class);
-        User user = response.getBody();
-        if (user == null) {
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8082/users/" + chatId, UserDto.class);
+        UserDto user = response.getBody();
+        if (response.getStatusCode().is4xxClientError()) {
             var chat = msg.getChat();
-            user = new User();
+            user = new UserDto();
             user.setChatId(chatId);
             user.setFirstName(chat.getFirstName());
             user.setLastName(chat.getLastName());
             user.setUserName(chat.getUserName());
             user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-            restTemplate.postForEntity("http://localhost:8082/users", user, User.class);
+            restTemplate.postForEntity("http://localhost:8082/users", user, UserDto.class);
         }
-
     }
 
-    public List<User> getAllUsers() {
-        ResponseEntity<User[]> response = restTemplate.getForEntity("http://localhost:8082/users", User[].class);
+    public List<UserDto> getAllUsers() {
+        ResponseEntity<UserDto[]> response = restTemplate.getForEntity("http://localhost:8082/users", UserDto[].class);
         return Arrays.asList(Objects.requireNonNull(response.getBody()));
     }
 }

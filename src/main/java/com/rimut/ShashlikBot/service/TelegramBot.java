@@ -1,9 +1,9 @@
-package com.rimut.ShashlikBot.service;
+package com.rimut.shashlikbot.service;
 
-import com.rimut.ShashlikBot.config.BotConfig;
-import com.rimut.ShashlikBot.service.commands.Command;
-import com.rimut.ShashlikBot.service.commands.StickerCommand;
-import com.rimut.db.microservice.model.User;
+import com.rimut.db.microservice.dtos.UserDto;
+import com.rimut.shashlikbot.config.BotConfig;
+import com.rimut.shashlikbot.service.commands.Command;
+import com.rimut.shashlikbot.service.commands.StickerCommand;
 import com.vdurmont.emoji.EmojiParser;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             if(messageText.contains("/send") && config.getOwnerId() == chatId) {
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
                 var users = restToDb.getAllUsers();
-                for (User user : users){
+                for (UserDto user : users){
                     executeMessage(prepareAndSendMessage(user.getChatId(), textToSend));
                 }
             } else {

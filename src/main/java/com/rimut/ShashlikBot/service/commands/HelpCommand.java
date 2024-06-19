@@ -1,7 +1,7 @@
-package com.rimut.ShashlikBot.service.commands;
+package com.rimut.shashlikbot.service.commands;
 
 
-import com.rimut.ShashlikBot.service.TelegramBot;
+import com.rimut.shashlikbot.service.TelegramBot;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

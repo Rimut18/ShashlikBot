@@ -1,6 +1,6 @@
-package com.rimut.ShashlikBot.service.commands;
+package com.rimut.shashlikbot.service.commands;
 
-import com.rimut.ShashlikBot.service.RestToDb;
+import com.rimut.shashlikbot.service.RestToDb;
 import com.vdurmont.emoji.EmojiParser;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
