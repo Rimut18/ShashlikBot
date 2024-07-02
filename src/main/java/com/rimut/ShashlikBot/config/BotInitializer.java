@@ -1,6 +1,6 @@
-package com.rimut.ShashlikBot.config;
+package com.rimut.shashlikbot.config;
 
-import com.rimut.ShashlikBot.service.TelegramBot;
+import com.rimut.shashlikbot.service.TelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;

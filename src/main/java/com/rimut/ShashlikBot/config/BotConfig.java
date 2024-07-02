@@ -1,4 +1,4 @@
-package com.rimut.ShashlikBot.config;
+package com.rimut.shashlikbot.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
